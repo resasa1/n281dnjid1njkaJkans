@@ -1,15 +1,38 @@
-import { Text, View } from "react-native";
+import { router } from 'expo-router';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth/cordova';
+import React, { useState } from 'react';
+import { SafeAreaView, Text } from "react-native";
+import { auth } from '../FirebaseConfig';
 
-export default function Index() {
+const index = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const signIn = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password)
+      if (user) router.replace('./(tabs)');
+    } catch (error: any) {
+      console.log(error)
+      alert('Sign in failedL ' + error.message);
+    }
+  }
+  
+  const signUp = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(auth, email, password)
+      if (user) router.replace('./(tabs)');
+    } catch (error: any) {
+      console.log(error)
+      alert('Sign in failedL ' + error.message);
+    }
+  }
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+    <SafeAreaView>
+      <Text>Login</Text>
+    </SafeAreaView>
+  )
 }
+
+export default index;
